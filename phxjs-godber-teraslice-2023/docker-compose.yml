@@ -1,0 +1,97 @@
+version: '2.4'
+services:
+  teraslice-master:
+    container_name: teraslice-master
+    image: terascope/teraslice:v0.83.0
+    scale: 1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5678/"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    ports:
+      - "5678:5678"
+    environment:
+      - TERAFOUNDATION_CONFIG=/app/config/docker-teraslice-master.yml
+    networks:
+      - cluster
+    volumes:
+      - teraslice-assets:/app/assets
+      - ./autoload:/app/autoload:delegated
+      - ./config:/app/config:delegated
+  teraslice-worker:
+    container_name: teraslice-worker
+    image: terascope/teraslice:v0.83.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://teraslice-master:5678/"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    scale: 1
+    stop_grace_period: 60s
+    environment:
+      - TERAFOUNDATION_CONFIG=/app/config/docker-teraslice-worker.yml
+    networks:
+      - cluster
+    volumes:
+      - teraslice-assets:/app/assets
+      - ./autoload:/app/autoload:delegated
+      - ./config:/app/config:delegated
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    ports:
+      - "9201:9200"
+      - "9301:9300"
+    environment:
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "network.host=0.0.0.0"
+      - "http.port=9200"
+      - "transport.tcp.port=9300"
+      - "discovery.type=single-node"
+      - "xpack.security.enabled=false"
+      - "xpack.ml.enabled=false"
+      - "xpack.watcher.enabled=false"
+      - "bootstrap.memory_lock=true"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - cluster
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+  kafka:
+    container_name: kafka
+    image: terascope/kafka-zookeeper:v1.1.0
+    ports:
+      - "2181:2181"
+      - "9092:9092"
+    restart: unless-stopped
+    networks:
+      - cluster
+    volumes:
+        - kafka-data:/kafka
+volumes:
+  teraslice-assets:
+    driver: local
+  elasticsearch-data:
+    driver: local
+  kafka-data:
+    driver: local
+  zookeeper-data:
+    driver: local
+networks:
+  cluster:

@@ -7,7 +7,7 @@ help:
 	@echo "cleantopics - removes kafka topics"
 	@echo "topics - creates kafka topics"
 
-all: temp/kafka_2.12-2.1.1 data
+all: data
 
 clean:
 	rm -rf temp/
@@ -16,12 +16,6 @@ cleandata:
 	rm -rf /tmp/kafka-logs /tmp/zookeeper
 
 data: temp/noaa-2016-sorted.json
-
-temp/kafka_2.12-2.1.1: temp/kafka_2.12-2.1.1.tgz
-	tar -C temp -zxf temp/kafka_2.12-2.1.1.tgz
-
-temp/kafka_2.12-2.1.1.tgz: temp
-	wget -P temp/ -nc http://apache.cs.utah.edu/kafka/2.1.1/kafka_2.12-2.1.1.tgz
 
 temp/noaa-2016-sorted.json: temp/noaa-2016.json
 	@echo "This step requires lots of memory or will take a long time"
@@ -52,13 +46,3 @@ temp/ghcnd-states.txt:
 
 temp:
 	mkdir temp
-
-topics:
-	temp/kafka_2.12-2.1.1/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 5 --topic noaa-csv-raw
-	temp/kafka_2.12-2.1.1/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 5 --topic noaa-json
-	temp/kafka_2.12-2.1.1/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 5 --topic noaa-json-us-az
-
-cleantopics:
-	temp/kafka_2.12-2.1.1/bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic noaa-csv-raw
-	temp/kafka_2.12-2.1.1/bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic noaa-json
-	temp/kafka_2.12-2.1.1/bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic noaa-json-us-az
