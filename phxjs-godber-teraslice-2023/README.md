@@ -36,6 +36,11 @@ In order to use the `earl` commands (`teraslice-cli`), you must install the
 `teraslice-cli` npm package globally and then configure an alias for the local
 Teraslice running at `http://127.0.0.1:5678/`.
 
+```bash
+npm install -g teraslice-cli
+earl aliases add local http://localhost:5678
+```
+
 ## Teraslice Example Jobs
 
 Start a job that just reads from the Kafka topic and logs some of the things
