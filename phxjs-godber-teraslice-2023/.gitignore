@@ -1,1 +1,4 @@
 temp
+autoload/*.zip
+elasticsearch-data
+kafka-data

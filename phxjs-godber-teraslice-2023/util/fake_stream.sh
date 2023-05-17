@@ -7,6 +7,8 @@
 LINES=500
 INFILE=$1
 TOPIC=${2:-testTopic}
+CMD="kafkacat" # kafkacat has recently changed its name to kcat, not in this case thouhg
+BROKER="kafka"
 
 if [ -z "$1" ]
   then
@@ -28,4 +30,6 @@ case "$(uname -s)" in
         ;;
 esac
 
-${splitCmd} -l ${LINES} --filter "kcat -P -b localhost -t ${TOPIC}; sleep 1; echo -n ." ${INFILE}
+echo "Writing to ${BROKER} on topic ${TOPIC}"
+
+${splitCmd} -l ${LINES} --filter "${CMD} -P -b ${BROKER} -t ${TOPIC}; sleep 1; echo -n ." ${INFILE}

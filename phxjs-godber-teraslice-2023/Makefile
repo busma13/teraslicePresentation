@@ -3,17 +3,11 @@
 help:
 	@echo "all - do all setup, gets kafka and data and processes data"
 	@echo "clean - deletes temp/"
-	@echo "cleandata - deletes /tmp/kafka-logs /tmp/zookeeper"
-	@echo "cleantopics - removes kafka topics"
-	@echo "topics - creates kafka topics"
 
 all: data
 
 clean:
 	rm -rf temp/
-
-cleandata:
-	rm -rf /tmp/kafka-logs /tmp/zookeeper
 
 data: temp/noaa-2016-sorted.json
 
@@ -46,3 +40,17 @@ temp/ghcnd-states.txt:
 
 temp:
 	mkdir temp
+
+getassets: autoload/elasticsearch-v3.5.0-node-14-bundle.zip autoload/file-v2.2.2-node-14-bundle.zip autoload/kafka-v3.3.1-node-14-bundle.zip autoload/standard-v0.21.0-node-14-bundle.zip
+
+autoload/elasticsearch-v3.5.0-node-14-bundle.zip:
+	wget -P autoload/ -nc https://github.com/terascope/elasticsearch-assets/releases/download/v3.5.0/elasticsearch-v3.5.0-node-14-bundle.zip
+
+autoload/file-v2.2.2-node-14-bundle.zip:
+	wget -P autoload/ -nc https://github.com/terascope/file-assets/releases/download/v2.2.2/file-v2.2.2-node-14-bundle.zip
+
+autoload/kafka-v3.3.1-node-14-bundle.zip:
+	wget -P autoload/ -nc https://github.com/terascope/kafka-assets/releases/download/v3.3.1/kafka-v3.3.1-node-14-bundle.zip
+
+autoload/standard-v0.21.0-node-14-bundle.zip:
+	wget -P autoload/ -nc https://github.com/terascope/standard-assets/releases/download/v0.21.0/standard-v0.21.0-node-14-bundle.zip
