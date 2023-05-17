@@ -4,7 +4,7 @@
 
 ```bash
 make getassets
-docker compose up -d
+docker compose up -d --build
 docker compose logs -f --no-log-prefix teraslice-master | bunyan
 ```
 
@@ -12,7 +12,7 @@ Check Services
 
 ```bash
 # check elasticsearch
-curl http://localhost:9200
+curl http://localhost:9200/_cat/indices
 # check teraslice
 curl http://localhost:5678
 # check kafka
@@ -24,11 +24,31 @@ docker compose exec -it shell bash
 ### Running fake_stream.sh
 
 ```bash
-./fake_stream.sh /tmp/data/2016-sorted.csv
-kafkacat -b kafka -t testTopic
+# in one terminal
+docker compose exec -it shell ./fake_stream.sh /tmp/data/noaa-2016-sorted.json
+# in another terminal
+docker compose exec -it shell kafkacat -b kafka -t testTopic
 ```
 
+## Teraslice CLI Setup
+
+In order to use the `earl` commands (`teraslice-cli`), you must install the
+`teraslice-cli` npm package globally and then configure an alias for the local
+Teraslice running at `http://127.0.0.1:5678/`.
+
 ## Teraslice Example Jobs
+
+Start a job that just reads from the Kafka topic and logs some of the things
+it reads.
+
+```bash
+earl tjm register local jobs/wx-read-data.json
+earl tjm start jobs/wx-read-data.json
+# look at the `stdout` output on the worker logs
+docker compose logs -f --no-log-prefix teraslice-worker | bunyan
+```
+
+## Teraslice Extra Example Jobs
 
 Register and start Teraslice job
 

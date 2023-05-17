@@ -1,0 +1,22 @@
+{
+    "name": "Read data from testTopic",
+    "lifecycle": "persistent",
+    "workers": 1,
+    "assets": [
+        "standard",
+        "kafka"
+    ],
+    "operations": [
+        {
+            "_op": "kafka_reader",
+            "topic": "testTopic",
+            "group": "kafka-read-test",
+            "size": 10000,
+            "wait": 15000
+        },
+        {
+            "_op": "stdout",
+            "limit": 5
+        }
+    ]
+}
