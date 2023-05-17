@@ -53,6 +53,15 @@ earl tjm start jobs/wx-read-data.json
 docker compose logs -f --no-log-prefix teraslice-worker | bunyan
 ```
 
+## Teraslice Asset Creation
+
+To generate a templated asset
+
+```bash
+teraslice-cli assets init
+teraslice-cli assets init --registry
+```
+
 ## Teraslice Extra Example Jobs
 
 Register and start Teraslice job
