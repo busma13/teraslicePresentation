@@ -1,0 +1,29 @@
+{
+    "name": "Filter Weather Data for Station ID USW00003192",
+    "lifecycle": "persistent",
+    "workers": 1,
+    "assets": [
+        "weather-alert",
+        "kafka"
+    ],
+    "operations": [
+        {
+            "_op": "kafka_reader",
+            "connection": "default",
+            "topic": "testTopic",
+            "group": "wx-filter-3",
+            "size": 10000,
+            "wait": 15000
+        },
+        {
+            "_op": "filterById",
+            "stationId": "USW00003192"
+        },
+        {
+            "_op": "kafka_sender",
+            "connection": "default",
+            "topic": "filteredWeatherData-1",
+            "size": 10
+        }
+    ]
+}

@@ -7,7 +7,7 @@ class FilterById extends BatchProcessor {
         let results = [];
 
         dataArray.forEach((doc) => {
-            if (doc.stationId === this.opConfig.stationId) {
+            if (doc.station.id === this.opConfig.stationId) {
                 results.push(doc);
             }
         });

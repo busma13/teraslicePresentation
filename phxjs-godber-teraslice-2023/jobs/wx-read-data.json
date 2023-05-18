@@ -1,14 +1,14 @@
 {
-    "name": "Read data from testTopic",
+    "name": "Read Weather data from testTopic",
     "lifecycle": "persistent",
     "workers": 1,
     "assets": [
-        "standard",
         "kafka"
     ],
     "operations": [
         {
             "_op": "kafka_reader",
+            "connection": "default",
             "topic": "testTopic",
             "group": "kafka-read-test",
             "size": 10000,
