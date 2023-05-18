@@ -27,7 +27,7 @@ docker compose exec -it shell bash
 # in one terminal
 docker compose exec -it shell ./fake_stream.sh /tmp/data/noaa-2016-sorted.json
 # in another terminal
-docker compose exec -it shell kafkacat -b kafka -t testTopic
+docker compose exec -it shell kafkacat -C -b kafka -t testTopic
 ```
 
 ## Teraslice CLI Setup
@@ -58,8 +58,14 @@ docker compose logs -f --no-log-prefix teraslice-worker | bunyan
 To generate a templated asset
 
 ```bash
+# generate asset structure
 teraslice-cli assets init
+# go write asset code, tests and test with ...
+yarn test
+# generate the asset registry (long story)
 teraslice-cli assets init --registry
+# build and deploy asset to test teraslice cluster
+earl assets deploy local --build --replace
 ```
 
 ## Teraslice Extra Example Jobs
