@@ -1,30 +1,79 @@
 # Code to accompany Teraslice Presentation
 
+These instructions are rough, but should work if you have all of the
+dependencies installed.  The demo was prepared on MacOS (Homebrew) using Docker.
+
+Some of the dependencies are:
+
+* `make`
+* `Docker`
+* `wget`
+* `bunyan` (Optional, `npm install -g bunyan`)
+
+NOTE: The `Makefile` has a bunch of extra junk in it for generating the data
+file from source, but if you're following these instructions you won't need
+those, since you'll be grabbing the prepared example data.
+
 ## Running Locally
 
+To get things going locally, the first thing we need to do is pull down
+Teraslice assets and data.  Warning the data file for this is going to be over
+3GB.
+
 ```bash
+# grab the teraslice assets to autoload them into teraslice on start
 make getassets
-docker compose up -d --build
-docker compose logs -f --no-log-prefix teraslice-master | bunyan
+# grab the data files
+make data
 ```
 
-Check Services
+Now we need to download and build all of the docker containers:
+
+```bash
+# this should download, build and start all needed containers in the background
+docker compose up -d --build
+
+# wait a bit and check all containers are running and are "healthy"
+docker compose ps
+
+# you can inspect the logs for each container this way; CTRL+c to exit
+docker compose logs -f elasticsearch
+docker compose logs -f --no-log-prefix teraslice-master | bunyan
+docker compose logs -f --no-log-prefix teraslice-worker | bunyan
+```
+
+## Check Services
+
+After things have started up, you can verify functionality of all of the
+services using the following commands:
 
 ```bash
 # check elasticsearch
 curl http://localhost:9200/_cat/indices
 # check teraslice
 curl http://localhost:5678
-# check kafka
+# check kafka, list topics
 docker compose exec shell kafkacat -L -b kafka:9092
 # how to get a shell in the shell container
 docker compose exec -it shell bash
 ```
 
+Note, if you don't see JSON info from Teraslice, for instance you may see
+`curl: (52) Empty reply from server`, then restart the teraslice master with:
+
+```bash
+docker compose restart teraslice-master
+```
+
+Then check again.
+
 ### Running fake_stream.sh
+
+Now that all of the
 
 ```bash
 # in one terminal
+docker compose exec -it shell ls -l /tmp/data/noaa-2016-sorted.json
 docker compose exec -it shell ./fake_stream.sh /tmp/data/noaa-2016-sorted.json
 # in another terminal
 docker compose exec -it shell kafkacat -C -b kafka -t testTopic
