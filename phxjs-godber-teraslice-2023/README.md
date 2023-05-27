@@ -9,6 +9,7 @@ Some of the dependencies are:
 * `Docker`
 * `wget`
 * `bunyan` (Optional, `npm install -g bunyan`)
+* `teraslice-cli`
 
 NOTE: The `Makefile` has a bunch of extra junk in it for generating the data
 file from source, but if you're following these instructions you won't need
@@ -69,15 +70,31 @@ Then check again.
 
 ### Running fake_stream.sh
 
-Now that all of the
+Now that all of the services are running, check for the data file and start
+the long running `fake_stream.sh` script in one terminal, this will run until
+it has written all the data, which will take many hours (like a day):
 
 ```bash
-# in one terminal
+# make sure the data file is available inside the `shell` container
+# if it is not, stop and review steps, it should be in temp/ on the host
 docker compose exec -it shell ls -l /tmp/data/noaa-2016-sorted.json
+# start up the fake_stream.sh script to dribble data into Kafka
 docker compose exec -it shell ./fake_stream.sh /tmp/data/noaa-2016-sorted.json
-# in another terminal
+```
+
+In another terminal in the same directory that contains the `docker-compose.yml`
+file
+
+```bash
+# you should now see testTopic if you list topics in Kafka
+docker compose exec shell kafkacat -L -b kafka:9092
+
+# you can watch the data flowing into the testTopic in Kafka with this
 docker compose exec -it shell kafkacat -C -b kafka -t testTopic
 ```
+
+You can either open yet another terminal at this point or stop the
+`kafkacat -C ...` command above.
 
 ## Teraslice CLI Setup
 
@@ -101,6 +118,30 @@ earl tjm start jobs/wx-read-data.json
 # look at the `stdout` output on the worker logs
 docker compose logs -f --no-log-prefix teraslice-worker | bunyan
 ```
+
+If this job runs and you see records written out in the Teraslice worker logs
+then you know that everything is setup to work correctly.  Good job!  You can
+leave this job running or stop it with the following command.  There's no
+need to leave it running to proceed with these instructions.
+
+```bash
+earl tjm stop jobs/wx-read-data.json
+```
+
+## Using Example Asset
+
+There is an example asset in the `./weather-alert-asset/` directory.  This can
+be built, deployed and used as follows:
+
+**UNTESTED**
+
+```bash
+# build and upload asset
+earl assets deploy local --build --replace
+earl tjm register local jobs/wx-filter-data.json
+earl tjm start jobs/wx-filter-data.json
+```
+
 
 ## Teraslice Asset Creation
 
@@ -135,6 +176,11 @@ docker compose exec shell kafkacat -C -b kafka:9092 -t test1 -c 5 -e
 
 ## Teardown
 
+When you're done, you can clean up all of the Docker stuff with this command:
+
 ```bash
 docker compose down -v --remove-orphans
 ```
+
+then remove this directory ... or run `make clean` if you just want to clean up
+the `temp/` directory with the large data files.
