@@ -6,10 +6,11 @@ class FilterForElevationBelowCertainLevel extends BatchProcessor {
     onBatch(dataArray) {
         let results = dataArray.slice();
 
-        results.filter(
+        results = results.filter(
             (item) => item.station.elevation < this.opConfig.elevation
         );
-
         return results;
     }
 }
+
+module.exports = FilterForElevationBelowCertainLevel;
