@@ -18,5 +18,13 @@
             "_op": "stdout",
             "limit": 5
         }
-    ]
+    ],
+    "__metadata": {
+        "cli": {
+            "cluster": "http://localhost:5678",
+            "version": "0.51.1",
+            "job_id": "0ffceb5d-fe05-466f-973f-d74ab4a55f3a",
+            "updated": "2023-07-16T23:31:49.660Z"
+        }
+    }
 }

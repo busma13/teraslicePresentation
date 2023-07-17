@@ -25,5 +25,13 @@
             "topic": "filteredWeatherData-1",
             "size": 10
         }
-    ]
+    ],
+    "__metadata": {
+        "cli": {
+            "cluster": "http://localhost:5678",
+            "version": "0.51.1",
+            "job_id": "343a0dc5-f6c6-4fb7-8184-46eec7a82508",
+            "updated": "2023-07-16T23:46:47.605Z"
+        }
+    }
 }

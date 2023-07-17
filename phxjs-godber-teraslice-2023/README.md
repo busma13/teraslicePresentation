@@ -54,7 +54,7 @@ curl http://localhost:9200/_cat/indices
 # check teraslice
 curl http://localhost:5678
 # check kafka, list topics
-docker compose exec shell kafkacat -L -b kafka:9092
+docker compose exec shell kcat -L -b kafka:9092
 # how to get a shell in the shell container
 docker compose exec -it shell bash
 ```
@@ -87,14 +87,14 @@ file
 
 ```bash
 # you should now see testTopic if you list topics in Kafka
-docker compose exec shell kafkacat -L -b kafka:9092
+docker compose exec shell kcat -L -b kafka:9092
 
 # you can watch the data flowing into the testTopic in Kafka with this
-docker compose exec -it shell kafkacat -C -b kafka -t testTopic
+docker compose exec -it shell kcat -C -b kafka -t testTopic
 ```
 
 You can either open yet another terminal at this point or stop the
-`kafkacat -C ...` command above.
+`kcat -C ...` command above.
 
 ## Teraslice CLI Setup
 
@@ -137,7 +137,9 @@ be built, deployed and used as follows:
 
 ```bash
 # build and upload asset
+cd weather-alert-asset
 earl assets deploy local --build --replace
+cd ..
 earl tjm register local jobs/wx-filter-data.json
 earl tjm start jobs/wx-filter-data.json
 ```
@@ -168,10 +170,10 @@ earl tjm start jobs/data-generator-to-kafka.json
 ```
 
 At this point you'll start seeing records in the `test1` kafka topic, you can
-use `kafkacat` in the `shell` container to read some of those records out:
+use `kcat` in the `shell` container to read some of those records out:
 
 ```bash
-docker compose exec shell kafkacat -C -b kafka:9092 -t test1 -c 5 -e
+docker compose exec shell kcat -C -b kafka:9092 -t test1 -c 5 -e
 ```
 
 ## Teardown

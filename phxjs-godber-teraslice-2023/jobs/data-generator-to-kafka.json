@@ -17,5 +17,13 @@
             "topic": "test1",
             "size": 25000
         }
-    ]
+    ],
+    "__metadata": {
+        "cli": {
+            "cluster": "http://localhost:5678",
+            "version": "0.51.1",
+            "job_id": "a117d548-0250-4245-9fb5-c2a615dc2f5e",
+            "updated": "2023-05-28T04:42:40.840Z"
+        }
+    }
 }

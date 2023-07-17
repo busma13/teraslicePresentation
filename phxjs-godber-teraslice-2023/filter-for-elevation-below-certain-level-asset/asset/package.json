@@ -1,0 +1,8 @@
+{
+    "name": "filter-for-elevations-below-certain-level",
+    "version": "0.1.0",
+    "description": "Filter incoming weather data for stations with an elevation below a certain level",
+    "dependencies": {
+        "@terascope/job-components": "^0.22.0"
+    }
+}
