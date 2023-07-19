@@ -1,15 +1,15 @@
 # Code to accompany Teraslice Presentation
 
 These instructions are rough, but should work if you have all of the
-dependencies installed.  The demo was prepared on MacOS (Homebrew) using Docker.
+dependencies installed. The demo was prepared on MacOS (Homebrew) using Docker.
 
 Some of the dependencies are:
 
-* `make`
-* `Docker`
-* `wget`
-* `bunyan` (Optional, `npm install -g bunyan`)
-* `teraslice-cli`
+- `make`
+- `Docker`
+- `wget`
+- `bunyan` (Optional, `npm install -g bunyan`)
+- `teraslice-cli`
 
 NOTE: The `Makefile` has a bunch of extra junk in it for generating the data
 file from source, but if you're following these instructions you won't need
@@ -18,7 +18,7 @@ those, since you'll be grabbing the prepared example data.
 ## Running Locally
 
 To get things going locally, the first thing we need to do is pull down
-Teraslice assets and data.  Warning the data file for this is going to be over
+Teraslice assets and data. Warning the data file for this is going to be over
 3GB.
 
 ```bash
@@ -120,8 +120,8 @@ docker compose logs -f --no-log-prefix teraslice-worker | bunyan
 ```
 
 If this job runs and you see records written out in the Teraslice worker logs
-then you know that everything is setup to work correctly.  Good job!  You can
-leave this job running or stop it with the following command.  There's no
+then you know that everything is setup to work correctly. Good job! You can
+leave this job running or stop it with the following command. There's no
 need to leave it running to proceed with these instructions.
 
 ```bash
@@ -130,20 +130,17 @@ earl tjm stop jobs/wx-read-data.json
 
 ## Using Example Asset
 
-There is an example asset in the `./weather-alert-asset/` directory.  This can
+There is an example asset in the `./weather-alert-asset/` directory. This can
 be built, deployed and used as follows:
 
 **UNTESTED**
 
 ```bash
 # build and upload asset
-cd weather-alert-asset
-earl assets deploy local --build --replace
-cd ..
+earl weather-alert-asset/assets deploy local --build --replace
 earl tjm register local jobs/wx-filter-data.json
 earl tjm start jobs/wx-filter-data.json
 ```
-
 
 ## Teraslice Asset Creation
 

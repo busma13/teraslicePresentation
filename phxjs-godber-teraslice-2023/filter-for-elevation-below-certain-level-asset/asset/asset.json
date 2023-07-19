@@ -1,5 +1,5 @@
 {
-    "name": "filter-for-elevations-below-certain-level",
+    "name": "filter-for-elevation-below-certain-level",
     "version": "0.1.0",
     "description": "Filter incoming weather data for stations with an elevation below a certain level"
 }

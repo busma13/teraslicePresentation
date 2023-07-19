@@ -1,0 +1,37 @@
+{
+    "name": "Filter Weather Data by elevations below sea level",
+    "lifecycle": "persistent",
+    "workers": 1,
+    "assets": [
+        "filter-for-elevation-below-certain-level",
+        "kafka"
+    ],
+    "operations": [
+        {
+            "_op": "kafka_reader",
+            "connection": "default",
+            "topic": "testTopic",
+            "group": "wx-filter-3",
+            "size": 10000,
+            "wait": 15000
+        },
+        {
+            "_op": "filterForElevation",
+            "elevation": 0
+        },
+        {
+            "_op": "kafka_sender",
+            "connection": "default",
+            "topic": "filteredWeatherData-1",
+            "size": 10
+        }
+    ],
+    "__metadata": {
+        "cli": {
+            "cluster": "http://localhost:5678",
+            "version": "0.51.1",
+            "job_id": "a1549926-0751-4394-a52b-5f0bc91338e2",
+            "updated": "2023-07-19T03:17:22.562Z"
+        }
+    }
+}
